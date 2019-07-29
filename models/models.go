@@ -8,7 +8,7 @@ import (
 )
 
 //ormer
-var O orm.Ormer
+var Db orm.Ormer
 
 type TbUser struct {
 	Uid        int `orm:"column(uid);pk"` // 设置主键
@@ -30,6 +30,7 @@ type TbAdUnit struct {
 	UpdateUid     int
 	RelevantUsers string
 	IsPublished   int
+	ViewNum       int
 }
 
 type TbResUnit struct {
@@ -62,6 +63,6 @@ func init() {
 	orm.RegisterModel(new(TbUser), new(TbAdUnit), new(TbResUnit), new(TbPic))
 
 	//初始化ormer
-	O = orm.NewOrm()
+	Db = orm.NewOrm()
 	fmt.Println("dbbase open")
 }
