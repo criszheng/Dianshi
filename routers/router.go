@@ -20,6 +20,11 @@ func init() {
 				&controllers.ResUnitController{},
 			),
 		),
+		beego.NSNamespace("/adUnit",
+			beego.NSInclude(
+				&controllers.AdUnitController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 }
