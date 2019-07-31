@@ -3,6 +3,7 @@ package common
 import (
 	"context"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -15,8 +16,10 @@ type CosUtil struct {
 	client *cos.Client
 }
 
+const COSURL = "https://dianshi-1251023989.cos.ap-chengdu.myqcloud.com"
+
 func (util CosUtil) CreateCosClient() *cos.Client {
-	u, _ := url.Parse("https://dianshi-1251023989.cos.ap-chengdu.myqcloud.com")
+	u, _ := url.Parse(COSURL)
 	b := &cos.BaseURL{BucketURL: u}
 	c := cos.NewClient(b, &http.Client{
 		Transport: &cos.AuthorizationTransport{
@@ -49,6 +52,17 @@ func Put(c *cos.Client, name string, data string) {
 	f := strings.NewReader(data)
 
 	resp, err := c.Object.Put(context.Background(), name, f, nil)
+
+	fmt.Println(resp.Status)
+
+	if err != nil {
+		panic(err)
+	}
+}
+
+func PutFile(c *cos.Client, name string, r io.Reader) {
+
+	resp, err := c.Object.Put(context.Background(), name, r, nil)
 
 	fmt.Println(resp.Status)
 

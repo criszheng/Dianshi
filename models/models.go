@@ -42,6 +42,7 @@ type TbResUnit struct {
 	UpdateUid     int
 	RelevantUsers string
 	IsPublished   int
+	Count         int `orm:"-"`
 }
 
 type TbPic struct {

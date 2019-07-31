@@ -45,7 +45,11 @@ func (c *ResUnitController) GetAllResUnit() {
 	if err != nil {
 		c.Data["json"] = common.Result{Code: common.FAIL, Message: "GetAllResUnit查询错误", Data: err.Error()}
 	} else {
-		//data,_ := json.Marshal(resUnits[0])
+		for _, resUnit := range resUnits {
+			qs := db.QueryTable("tb_ad_unit")
+			count, _ := qs.Filter("res_id", resUnit.ResId).Count()
+			resUnit.Count = int(count)
+		}
 		c.Data["json"] = common.Result{Code: common.SUCCESS, Data: resUnits}
 	}
 	c.ServeJSON()
