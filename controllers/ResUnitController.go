@@ -36,7 +36,7 @@ func (c *ResUnitController) AddResUnit() {
 	c.ServeJSON()
 }
 
-// @router /getAllResUnit [post]
+// @router /getAllResUnit [get]
 func (c *ResUnitController) GetAllResUnit() {
 	db := models.Db
 	qs := db.QueryTable("tb_res_unit")
@@ -73,7 +73,7 @@ func (c *ResUnitController) GetResUnit() {
 		c.Data["json"] = common.Result{Code: common.FAIL, Message: "GetResUnit查询错误", Data: err.Error()}
 	} else {
 		//data,_ := json.Marshal(resUnits[0])
-		if resUnits[0] == nil {
+		if len(resUnits) == 0 {
 			c.Data["json"] = common.Result{Code: common.SUCCESS, Data: ""}
 		} else {
 			c.Data["json"] = common.Result{Code: common.SUCCESS, Data: resUnits[0]}
