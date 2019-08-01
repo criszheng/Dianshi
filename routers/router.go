@@ -25,6 +25,11 @@ func init() {
 				&controllers.PicController{},
 			),
 		),
+		beego.NSNamespace("/adUnit",
+			beego.NSInclude(
+				&controllers.AdUnitController{},
+				),
+		),
 	)
 	beego.AddNamespace(ns)
 }
