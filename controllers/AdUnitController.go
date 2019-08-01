@@ -13,14 +13,14 @@ type AdUnitController struct {
 }
 
 const (
-	MOVE_TOP = 0
-	MOVE_UP = 1
+	MOVE_TOP  = 0
+	MOVE_UP   = 1
 	MOVE_DOWN = 2
 )
 
-type UpdateOrderAttr struct{
-   MoveOperation int
-   AdId int
+type UpdateOrderAttr struct {
+	MoveOperation int
+	AdId          int
 }
 
 //新建广告位
@@ -39,11 +39,11 @@ func (c *AdUnitController) AddAdUnit() {
 		if err1 != nil {
 			c.Data["json"] = common.Result{Code: common.FAIL, Message: "AddResUnit插入错误", Data: err1.Error()}
 		} else {
-			adUnit.AdID = int(id)
+			adUnit.AdId = int(id)
 			c.Data["json"] = common.Result{Code: common.SUCCESS, Data: adUnit}
 		}
 	} else {
-		c.Data["json"] = common.Result{Code: common.FAIL, Message: "传入参数错误", Data:err.Error()}
+		c.Data["json"] = common.Result{Code: common.FAIL, Message: "传入参数错误", Data: err.Error()}
 	}
 	c.ServeJSON()
 }
@@ -69,7 +69,7 @@ func (c *AdUnitController) GetAllAdUnitByRes() {
 			c.Data["json"] = common.Result{Code: common.SUCCESS, Data: adUnits}
 		}
 	} else {
-		c.Data["json"] = common.Result{Code: common.FAIL, Message: "传入参数错误", Data:err.Error()}
+		c.Data["json"] = common.Result{Code: common.FAIL, Message: "传入参数错误", Data: err.Error()}
 	}
 	c.ServeJSON()
 }
@@ -92,7 +92,7 @@ func (c *AdUnitController) UpdateAdUnit() {
 			c.Data["json"] = common.Result{Code: common.SUCCESS, Data: num}
 		}
 	} else {
-		c.Data["json"] = common.Result{Code: common.FAIL, Message: "传入参数错误", Data:err.Error()}
+		c.Data["json"] = common.Result{Code: common.FAIL, Message: "传入参数错误", Data: err.Error()}
 	}
 	c.ServeJSON()
 }
@@ -106,9 +106,9 @@ func (c *AdUnitController) DeleteAdUnit() {
 	}
 	var adUnit models.TbAdUnit
 	var err error
-	if err = json.Unmarshal(c.Ctx.Input.RequestBody, &adUnit); adUnit.AdID != 0 && err == nil {
+	if err = json.Unmarshal(c.Ctx.Input.RequestBody, &adUnit); adUnit.AdId != 0 && err == nil {
 		db := models.Db
-		num, err1 := db.Delete(&models.TbAdUnit{AdID : adUnit.AdID})
+		num, err1 := db.Delete(&models.TbAdUnit{AdId: adUnit.AdId})
 		if err1 != nil {
 			c.Data["json"] = common.Result{Code: common.FAIL, Message: "UpdateAdUnit删除错误", Data: err1.Error()}
 		} else {
@@ -120,7 +120,6 @@ func (c *AdUnitController) DeleteAdUnit() {
 	c.ServeJSON()
 }
 
-
 // @router /clickAd [post]
 func (c *AdUnitController) ClickAd() {
 	if len(c.Ctx.Input.RequestBody) == 0 {
@@ -129,23 +128,22 @@ func (c *AdUnitController) ClickAd() {
 		return
 	}
 	var adUnit models.TbAdUnit
-	if err := json.Unmarshal(c.Ctx.Input.RequestBody,&adUnit); err == nil {    //传来addId
+	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &adUnit); err == nil { //传来addId
 
-		db:=models.Db
+		db := models.Db
 		adUnit.ViewNum += 1
-		num, err := db.Update(&adUnit,"view_num")   //不知道是不是数据库列名
+		num, err := db.Update(&adUnit, "view_num") //不知道是不是数据库列名
 		if err != nil {
 			c.Data["json"] = common.Result{Code: common.FAIL, Message: "增加点击量错误", Data: err.Error()}
 		} else {
 			c.Data["json"] = common.Result{Code: common.SUCCESS, Data: num}
 		}
 	} else {
-		c.Data["json"] = common.Result{Code: common.FAIL, Message: "传入参数错误", Data:err.Error()}
+		c.Data["json"] = common.Result{Code: common.FAIL, Message: "传入参数错误", Data: err.Error()}
 	}
 
 	c.ServeJSON()
 }
-
 
 // @router /updateOrder [post]
 func (c *AdUnitController) UpdateOrder() {
@@ -160,7 +158,7 @@ func (c *AdUnitController) UpdateOrder() {
 		db := models.Db
 		var adUnitChoosed models.TbAdUnit
 		qs := db.QueryTable("tb_ad_unit")
-		err1 :=db.QueryTable("tb_ad_unit").Filter("ad_id",updateOrderAttr.AdId).One(&adUnitChoosed)
+		err1 := db.QueryTable("tb_ad_unit").Filter("ad_id", updateOrderAttr.AdId).One(&adUnitChoosed)
 		if err1 != nil {
 			c.Data["json"] = common.Result{Code: common.FAIL, Message: "UpdateOrder错误", Data: err1.Error()}
 			return
@@ -174,60 +172,53 @@ func (c *AdUnitController) UpdateOrder() {
 		}
 		switch updateOrderAttr.MoveOperation {
 		case MOVE_TOP:
-			for _,adUnit := range adUnits{
+			for _, adUnit := range adUnits {
 				//从0还是1开始排
-				if adUnit.AdID > adUnitChoosed.Order{
+				if adUnit.AdId > adUnitChoosed.Order {
 					continue
-				} else if adUnit.AdID == updateOrderAttr.AdId {
+				} else if adUnit.AdId == updateOrderAttr.AdId {
 					adUnit.Order = 0
-				}else if adUnit.Order < adUnitChoosed.Order{
+				} else if adUnit.Order < adUnitChoosed.Order {
 					adUnit.Order += 1
 				}
-				if _,err1 = db.Update(&adUnit);err1==nil{
-				}else{
+				if _, err1 = db.Update(&adUnit); err1 == nil {
+				} else {
 					c.Data["json"] = common.Result{Code: common.FAIL, Message: "更新数据库信息错误", Data: err1.Error()}
 				}
 			}
-		case MOVE_UP:  //第一个还能上移吗，前端应该能识别并阻止此操作，不会往后端发请求吧
-			for _,adUnit := range adUnits{
+		case MOVE_UP: //第一个还能上移吗，前端应该能识别并阻止此操作，不会往后端发请求吧
+			for _, adUnit := range adUnits {
 				if adUnit.Order == adUnitChoosed.Order {
 					adUnit.Order -= 1
-				}else if adUnit.Order == adUnitChoosed.Order - 1{
+				} else if adUnit.Order == adUnitChoosed.Order-1 {
 					adUnit.Order += 1
-				}else{
+				} else {
 					continue
 				}
-				if _,err1 = db.Update(&adUnit);err1==nil{
-				}else{
+				if _, err1 = db.Update(&adUnit); err1 == nil {
+				} else {
 					c.Data["json"] = common.Result{Code: common.FAIL, Message: "更新数据库信息错误", Data: err1.Error()}
 				}
 			}
 		case MOVE_DOWN:
-			for _,adUnit := range adUnits{
+			for _, adUnit := range adUnits {
 				if adUnit.Order == adUnitChoosed.Order {
 					adUnit.Order += 1
-				}else if adUnit.Order == adUnitChoosed.Order + 1{
+				} else if adUnit.Order == adUnitChoosed.Order+1 {
 					adUnit.Order -= 1
-				}else{
+				} else {
 					continue
 				}
-				if _,err1 = db.Update(&adUnit);err1==nil{
-				}else{
+				if _, err1 = db.Update(&adUnit); err1 == nil {
+				} else {
 					c.Data["json"] = common.Result{Code: common.FAIL, Message: "更新数据库信息错误", Data: err1.Error()}
 				}
 			}
 		}
 		c.Data["json"] = common.Result{Code: common.SUCCESS, Data: updateOrderAttr.AdId}
 
-
 	} else {
-		c.Data["json"] = common.Result{Code: common.FAIL, Message: "传入参数错误", Data:err.Error()}
+		c.Data["json"] = common.Result{Code: common.FAIL, Message: "传入参数错误", Data: err.Error()}
 	}
 	c.ServeJSON()
 }
-
-
-
-
-
-
