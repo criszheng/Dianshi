@@ -11,16 +11,16 @@ import (
 var Db orm.Ormer
 
 type TbUser struct {
-	Uid        int `orm:"column(uid);pk"` // 设置主键
-	RtxName    string
-	Password   string
-	CreateTime time.Time `orm:"auto_now_add;type(datetime)"`
+	Uid        int       `orm:"column(uid);pk";json:"name"` // 设置主键
+	RtxName    string    `json:"rtxName"`
+	Password   string    `json:"password"`
+	CreateTime time.Time `orm:"auto_now_add;type(datetime)";json:"createTime"`
 }
 
 type TbAdUnit struct {
-	AdID          int `orm:"column(ad_id);pk"` // 设置主键
-	AdName        string
-	AdSubname     string
+	AdId          int    `orm:"column(ad_id);pk"` // 设置主键
+	AdName        string `json:"adName"`
+	AdSubTitle    string
 	ResId         int
 	Type          int
 	Order         int
@@ -30,12 +30,26 @@ type TbAdUnit struct {
 	UpdateUid     int
 	RelevantUsers string
 	IsPublished   int
+	Title         string
+	BgType        int
+	BgColor       string
+	BgPicUrl      string
+	LinkType      int
+	ButtonName    string
+	Link          string
+	OnTime        time.Time
+	OffTime       time.Time
+	Remark        string
+	IsUrgency     int
+	UrgencyMsg    string
+	IsUrgencyLink int
+	UrgencyUrl    string
 	ViewNum       int
 }
 
 type TbResUnit struct {
-	ResId         int `orm:"column(res_id);pk"` // 设置主键
-	ResName       string
+	ResId         int       `orm:"column(res_id);pk"` // 设置主键
+	ResName       string    `json:"resName"`
 	CreateTime    time.Time `orm:"auto_now_add;type(datetime)"`
 	UpdateTime    time.Time `orm:"auto_now;type(datetime)"`
 	CreatorUid    int
@@ -43,6 +57,20 @@ type TbResUnit struct {
 	RelevantUsers string
 	IsPublished   int
 	Count         int `orm:"-"`
+	ResTitle      string
+	LinkType      int
+	ButtonName    string
+	Link          string
+	Url           string
+	BgType        int
+	BgColor       string
+	BgPicUrl      string
+	Msg           string
+	Remark        string
+	IsUrgency     int
+	UrgencyMsg    string
+	IsUrgencyLink int
+	UrgencyUrl    string
 }
 
 type TbPic struct {
