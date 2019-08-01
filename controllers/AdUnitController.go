@@ -35,7 +35,7 @@ func (c *AdUnitController) ClickAd() {
 
 		db:=models.Db
 		adUnit.ViewNum += 1
-		num, err := db.Update(&adUnit)
+		num, err := db.Update(&adUnit,"view_num")   //不知道是不是数据库列名
 		if err != nil {
 			c.Data["json"] = common.Result{Code: common.FAIL, Message: "增加点击量错误", Data: err.Error()}
 		} else {
@@ -119,6 +119,8 @@ func (c *AdUnitController) UpdateOrder() {
 				}
 			}
 		}
+		c.Data["json"] = common.Result{Code: common.SUCCESS, Data: updateOrderAttr.AdId}
+
 
 	} else {
 		c.Data["json"] = common.Result{Code: common.FAIL, Message: "传入参数错误", Data:err.Error()}
