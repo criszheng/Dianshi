@@ -31,10 +31,10 @@ func (c *AdUnitController) ClickAd() {
 		return
 	}
 	var adUnit models.TbAdUnit
-	if err := json.Unmarshal(c.Ctx.Input.RequestBody,adUnit); err == nil {    //传来addId
+	if err := json.Unmarshal(c.Ctx.Input.RequestBody,&adUnit); err == nil {    //传来addId
 
 		db:=models.Db
-		adUnit.AdID += 1
+		adUnit.ViewNum += 1
 		num, err := db.Update(&adUnit)
 		if err != nil {
 			c.Data["json"] = common.Result{Code: common.FAIL, Message: "增加点击量错误", Data: err.Error()}
@@ -44,6 +44,7 @@ func (c *AdUnitController) ClickAd() {
 	} else {
 		c.Data["json"] = common.Result{Code: common.FAIL, Message: "传入参数错误", Data:err.Error()}
 	}
+
 	c.ServeJSON()
 }
 
