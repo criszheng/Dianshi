@@ -20,7 +20,7 @@ type TbUser struct {
 type TbAdUnit struct {
 	AdId          int       `orm:"column(ad_id);pk" json:"adId"` // 设置主键
 	AdName        string    `json:"adName"`
-	AdSubTitle    string    `json:"adSubTitle"`
+	AdSubtitle    string    `json:"adSubtitle"`
 	ResId         int       `json:"resId"`
 	Type          int       `json:"type"`
 	Order         int       `json:"order"`
