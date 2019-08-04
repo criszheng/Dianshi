@@ -50,12 +50,12 @@ func (c *ResUnitController) GetAllResUnit() {
 			count, _ := qs.Filter("res_id", resUnit.ResId).Count()
 			resUnit.Count = int(count)
 		}
-		c.Data["json"] = common.Result{Code: common.SUCCESS, Data: resUnits}
+		c.Data["json"] = common.Result{Code: common.SUCCESS, Data: "hhh"}
 	}
 	c.ServeJSON()
 }
 
-// @router /getResUnit [post]
+// @router /getResUnit [get]
 func (c *ResUnitController) GetResUnit() {
 	if len(c.Ctx.Input.RequestBody) == 0 {
 		c.Data["json"] = common.Result{Code: common.FAIL, Message: "参数错误", Data: ""}
